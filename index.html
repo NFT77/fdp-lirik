@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Koleksi Lirik Lagu - FDP</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        
+        .lyrics-content {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            user-select: text;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            opacity: 0.9;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .filter-category {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-section-title {
+            color: white;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 5px 15px;
+            margin-bottom: 25px;
+            display: flex;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 10px;
+            border: none;
+            font-size: 0.95rem;
+            outline: none;
+            background: transparent;
+        }
+
+        .search-box button {
+            background: #667eea;
+            border: none;
+            padding: 0 20px;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .song-list {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-height: 550px;
+            overflow-y: auto;
+        }
+
+        .song-list-header {
+            background: #667eea;
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .song-item:hover {
+            background: #f0f2ff;
+        }
+
+        .song-item.selected {
+            background: #eef2ff;
+            border-left: 4px solid #667eea;
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .song-artist {
+            color: #888;
+            font-size: 0.75rem;
+            margin-top: 3px;
+        }
+
+        .song-genre-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            margin-top: 5px;
+            color: #667eea;
+        }
+
+        .song-play {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .lyrics-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .lyrics-header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .lyrics-header h2 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+
+        .lyrics-header .artist {
+            color: #888;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .album-badge {
+            display: inline-block;
+            background: #667eea20;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            color: #667eea;
+        }
+
+        .link-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .spotify-link, .prarilis-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .spotify-link {
+            background: #1DB954;
+            color: white;
+        }
+
+        .prarilis-link {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .lyrics-content {
+            line-height: 1.7;
+            white-space: pre-line;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            user-select: text;
+        }
+
+        .no-selection {
+            text-align: center;
+            color: #aaa;
+            padding: 40px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 25px;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 700px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .link-buttons {
+                flex-direction: column;
+            }
+            .spotify-link, .prarilis-link {
+                justify-content: center;
+            }
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Koleksi Lirik Lagu</h1>
+            <p>Koleksi lirik lagu FDP | Rock, Pop, Alternative, Electronic</p>
+        </header>
+
+        <!-- Filter Kategori -->
+        <div class="filter-category">
+            <div class="filter-section-title">📁 KATEGORI</div>
+            <div class="filter-section" id="filterSection">
+                <button class="filter-btn active" data-category="all">🎵 Semua</button>
+                <button class="filter-btn" data-category="single">🎤 Single</button>
+            </div>
+        </div>
+
+        <!-- Filter Genre -->
+        <div class="filter-category">
+            <div class="filter-section-title">🎸 GENRE MUSIK</div>
+            <div class="filter-section" id="genreSection">
+                <button class="filter-btn active" data-genre="all">🎧 Semua Genre</button>
+                <button class="filter-btn" data-genre="Rock">🎸 Rock</button>
+                <button class="filter-btn" data-genre="Pop">🎤 Pop</button>
+                <button class="filter-btn" data-genre="Alternative/Indie">🎶 Alternative/Indie</button>
+                <button class="filter-btn" data-genre="Electronic">⚡ Electronic</button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari judul lagu atau artis..." onkeyup="filterAndDisplay()">
+            <button onclick="filterAndDisplay()">🔍 Cari</button>
+        </div>
+
+        <div class="stats" id="stats">📊 Memuat data...</div>
+
+        <div class="main-content">
+            <div class="song-list">
+                <div class="song-list-header">📋 Daftar Lagu</div>
+                <div id="songList">Loading...</div>
+            </div>
+            <div class="lyrics-panel" id="lyricsPanel">
+                <div class="no-selection">🎤 Klik salah satu lagu untuk melihat liriknya</div>
+            </div>
+        </div>
+
+        <footer>
+            Bosan dengan playlist yang itu-itu aja? Yuk tambahkan koleksi lagu terbaru ini! Dijamin harimu jadi lebih berwarna. 🎵✨
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // DATA LAGU FDP (8 LAGU)
+        // 1. Last Stand (Rock)
+        // 2. Scroll Tenggelam (Pop)
+        // 3. Dia Jual Mahal (Pop)
+        // 4. Belajar Ikhlas (Alternative/Indie)
+        // 5. Digital Dream (Electronic)
+        // 6. Hidup Seperti Larry (Rock)
+        // 7. Ternyata (Alternative/Indie)
+        // 8. Tanda Baca Putus Asa (Pop) - LAGU BARU
+        // ============================================
+        const songsData = [
+            {
+                id: 1,
+                title: "Last Stand",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Rock",
+                spotifyLink: "https://open.spotify.com/intl-id/track/7t93fHfpMwkB61W6ByF0xA",
+                prarilisLink: "https://sndo.ffm.to/eeq7o8r",
+                lyrics: `[Intro]
+"Ini bukan tentang menang atau kalah. Ini tentang tidak pernah menyerah. FDP Last Stand."
+
+[Verse 1]
+Semua jalan telah tertutup
+Semua pilihan telah habis
+Di depan mata hanya tembok tinggi
+Di belakang punggung hanya jurang dalam
+Tapi FDP tak pernah diajari mundur
+Bukan karena berani
+Tapi karena tak ada lagi yang bisa hilang
+
+[Pre-Chorus]
+Mereka bilang "menyerah saja"
+Mereka bilang "ini sudah takdir"
+Tapi FDP bilang: "Takdir untuk yang takut bertarung!"
+
+[Chorus]
+FDP LAST STAND! (FDP! FDP!)
+Di ujung dunia, di mana semua pergi
+Aku berdiri dengan tangan kosong
+Tapi hati penuh api
+FDP LAST STAND! (FDP! FDP!)
+Bukan untuk kemenangan yang pasti
+Tapi untuk buktikan aku pernah berjuang
+Sampai napas terakhir ini
+
+[Verse 2]
+Luka di tubuhku tak terhitung
+Darah di wajahku campur keringat
+Tapi mataku masih menyala
+Mereka punya pedang dan perisai
+Aku hanya punya keyakinan
+Tapi keyakinan itu cukup
+Untuk membuat langit bergetar
+
+[Bridge - slow]
+Aku ingat ibuku bilang: "Jatuh itu biasa, tak bangkit itu aib"
+Aku ingat sahabatku bilang: "Kamu jatuh, kami yang angkat"
+Tapi sekarang aku sendiri
+Karena ini pertarunganku sendiri
+
+[Breakdown - slow heavy]
+INI... PERTARUNGAN... TERAKHIR... (FDP!)
+TAK ADA... JALAN... MUNDUR... (FDP!)
+HANYA AKU... DAN MEREKA...
+FDP PILIH TETAP BERDIRI SAMPAI AKHIR
+
+[Final Chorus]
+FDP LAST STAND!
+Biar tubuhku roboh, biar tulangku hancur
+Tapi namaku akan tetap bergema
+FDP LAST STAND!
+Ini bukan akhir, ini awal yang baru
+Dari abu pertarungan ini, FDP akan lahir kembali!
+FDP! LAST! STAND!
+
+[Outro]
+"Mereka mengira aku mati. Tapi pejuang sejati tidak pernah mati. FDP Last Stand selesai. Tapi FDP belum selesai."`
+            },
+            {
+                id: 2,
+                title: "Scroll Tenggelam",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Pop",
+                spotifyLink: "https://open.spotify.com/intl-id/track/6ZA7pQdqtJl2PY3ji605l3",
+                prarilisLink: "https://sndo.ffm.to/b6lvwpb",
+                lyrics: `[Verse 1]
+Saya buka hp sebelum tidur
+Hanya sebentar
+2 menit
+5 menit
+30 menit
+
+Saya bilang pada diri sendiri
+"Sekali lagi scroll ke bawah"
+Layar bergerak
+Konten berganti
+Waktu berjalan tanpa saya sadari
+
+[Pre-chorus]
+1 video
+2 video
+100 video
+Semua sama
+Tidak ada yang istimewa
+Tapi jari saya tidak berhenti
+
+[Chorus]
+Scroll tenggelam
+Saya hilang di dalam umpan
+Scroll tenggelam
+Dunia nyata mulai kabur
+
+Saya coba lihat ke jendela
+Matahari sudah terbit
+Padahal tadi masih maghrib
+Scroll tenggelam
+Jam sudah menunjukkan pukul 3 pagi
+Tapi saya masih di sini
+Di kamar yang sama
+Di layar yang sama
+
+[Verse 2]
+Saya scroll lihat hidup orang lain
+Mereka bahagia
+Mereka travelling
+Mereka wisuda
+Mereka menikah
+
+Saya lihat hidup saya
+Di kasur
+Dengan hp
+Mata perih
+Leher kaku
+
+Saya coba posting sesuatu
+Tidak ada yang like
+Saya hapus
+Saya scroll lagi
+
+[Pre-chorus 2]
+Mata saya sudah merah
+Jari saya sudah kram
+Tapi otak saya bilang
+"Sedikit lagi"
+Sedikit lagi tidak pernah selesai
+
+[Chorus]
+Scroll tenggelam
+Saya tahu ini tidak sehat
+Scroll tenggelam
+Tapi saya tidak bisa berhenti
+
+Saya coba pasang alarm
+Alarmnya berbunyi
+Tidak saya gubris
+Saya scroll terus
+Scroll tenggelam
+Seperti sungai
+Saya hanyut
+Tidak ada yang menarik saya keluar
+
+[Bridge]
+Suatu hari saya tidak charge hp
+Baterai habis
+Layar mati
+Saya melihat pantulan wajah saya di kaca hitam
+
+Mata sembab
+Kulit pucat
+Saya tidak kenal diri sendiri
+
+Saya coba nyalakan hp lagi
+Baterai 1%
+Saya colok charger
+Layar menyala
+Saya scroll lagi
+5 detik kemudian hp mati total
+
+Saya terdiam
+Saya mendengar suara detak jam
+Saya mendengar suara napas saya
+Saya mendengar suara kosong
+
+Mungkin inilah yang namanya tenggelam
+Bukan di air
+Tapi di layar
+
+[Chorus final]
+Scroll tenggelam
+Saya biarkan hp mati
+Scroll tenggelam
+Saya duduk di kegelapan
+
+Tidak ada notifikasi
+Tidak ada video
+Tidak ada like
+Hanya saya
+Dan sunyi
+
+Scroll tenggelam
+Saya tidak tahu ini kebebasan
+Atau keputusasaan
+
+[Outro]
+3 jam kemudian
+Hp menyala kembali
+Saya buka
+Saya scroll lagi
+
+Siklus tidak pernah berhenti
+Scroll tenggelam
+Selesai.`
+            },
+            {
+                id: 3,
+                title: "Dia Jual Mahal",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Pop",
+                spotifyLink: "https://open.spotify.com/intl-id/album/14VoLJWvpsstVqH4oRcA7t",
+                prarilisLink: "https://sndo.ffm.to/erk7p6v",
+                lyrics: `[Verse 1]
+Dia jual mahal, kayak gue gak tahu diri
+Sok sibuk, sok susah, sok gak punya waktu
+Padahal FDP tahu caranya main hati
+Tapi gue milih mundur – bukan karena gue takut, tapi karena gue udah cukup dewasa
+
+Dulu FDP pernah ngejar yang gak jelas
+Buang waktu, buang tenaga, buang perasaan
+Sekarang mah beda – FDP gak mau jadi orang yang cuma dianggep pilihan kedua
+
+[Chorus]
+Dia jual mahal, tapi FDP gak beli
+Gue tau harga diri – gak bisa ditawar-tawar lagi
+Dia jual mahal, FDP cuma senyum kecil
+Dari pada maksa, mending gue ngopi sendiri
+
+Bukan sombong, bukan gak mau
+Tapi FDP capek jadi orang yang selalu ngejar
+Dia jual mahal – yaudah, FDP mundur
+Gue pilih yang ngerti, bukan yang pura-pura susah
+
+[Verse 2]
+Dia pikir dengan jual mahal, gue bakal makin penasaran
+Dia pikir dengan sok sibuk, gue bakal makin ngejar
+FDP bilang: "Sayang, salah strategi."
+Gue gak pernah beli barang yang gak jelas garansinya
+
+Dia dulu dekat, terus jauh, terus dekat lagi
+Kayak sinyal di kampung – masuk gila keluar gila
+FDP bingung? Gak juga.
+Gue cuma sadar: dia lagi main sandiwara, FDP gak mau jadi penontonnya
+
+[Chorus]
+Dia jual mahal, tapi FDP gak beli
+Gue tau harga diri – gak bisa ditawar-tawar lagi
+Dia jual mahal, FDP cuma senyum kecil
+Dari pada maksa, mending gue ngopi sendiri
+
+Bukan sombong, bukan gak mau
+Tapi FDP capek jadi orang yang selalu ngejar
+Dia jual mahal – yaudah, FDP mundur
+Gue pilih yang ngerti, bukan yang pura-pura susah
+
+[Bridge]
+"Dulu FDP mikir, mungkin dia emang butuh waktu.
+Tapi lama-lama FDP sadar:
+
+Orang yang jual mahal itu biasanya gak punya stok.
+Kosong, tapi pura-pura laku keras.
+
+Makasih ya udah ngajarin FDP satu hal:
+Cinta itu bukan tender, gak perlu ada yang nawar.
+Kalau dia jual mahal – yaudah. FDP beli di toko sebelah.
+
+Atau lebih baik... gue ngopi sendiri. Lebih enak, lebih tentram."
+
+La-la-la – FDP santai aja
+La-la-la – gak perlu yang jual mahal
+La-la-la – gue pilih yang tulus
+Yang datang bukan karena butuh, tapi karena mau
+
+[Final Chorus]
+Dia jual mahal, tapi FDP gak beli
+Gue tau harga diri – gak bisa ditawar-tawar lagi
+Dia jual mahal, FDP cuma senyum kecil
+Dari pada maksa, mending gue ngopi sendiri
+
+Bukan sombong, bukan gak mau
+Tapi FDP capek jadi orang yang selalu ngejar
+Dia jual mahal – yaudah, FDP mundur
+Gue pilih yang ngerti, bukan yang pura-pura susah
+
+[Outro]
+Sekarang FDP tau:
+Yang beneran mau, gak perlu dijual mahal.
+Yang beneran serius, gak perlu pura-pura sibuk.
+Dia jual mahal – FDP gak beli.
+Gue pilih bahagia dari pada pusing tujuh keliling.
+
+Bisikan sambil ketawa kecil
+Dia jual mahal.`
+            },
+            {
+                id: 4,
+                title: "Belajar Ikhlas",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Alternative/Indie",
+                spotifyLink: "https://open.spotify.com/intl-id/album/5FmR0oeObyPQV3WAMCEB54",
+                prarilisLink: "https://sndo.ffm.to/oxwjr0q",
+                lyrics: `[Intro]
+Hujan gerimis di luar jendela
+FDP duduk sendiri dengan sisa cerita
+Cangkir kopi sudah dingin sejak tadi
+Tapi hati masih hangat... karena air mata yang tak jadi tumpah
+
+[Verse 1]
+Dulu FDP pernah punya mimpi
+Tentang dia yang selalu ada di sisi
+Tentang masa depan yang dibangun bersama
+Ternyata mimpi indah cuma di kepala
+
+FDP ingat waktu pertama
+Dia datang dengan senyum yang nyata
+FDP pikir ini yang ditunggu
+Tapi ternyata... dia cuma lewat, bukan menunggu
+
+Perlahan dia menjauh tanpa alasan
+FDP bertanya-tanya di setiap kesempatan
+"Ada yang salah? FDP kurang apa?"
+Jawabannya hanya diam dan jarak yang membara
+
+[Chorus]
+FDP belajar ikhlas... walau sakit
+Melepaskan yang memaksa adalah bentuk cinta
+Bukan untuk dia... tapi untuk FDP sendiri
+Karena hati ini pantas untuk bahagia
+Bukan untuk terus-terusan menangis dalam diam
+
+[Verse 2]
+Waktu berjalan, FDP mulai sadar
+Bahwa cinta bukan soal siapa yang paling bertahan
+Tapi siapa yang paling bisa... melepaskan dengan lapang dada
+Tanpa meninggalkan luka yang membekas di jiwa
+
+FDP buang semua kenangan
+Foto, chat, jaket yang dulu dipinjam
+FDP bakar pelan-pelan di halaman belakang
+Bukan karena benci... tapi karena ingin lega dan tenang
+
+Dulu FDP pikir ikhlas itu lemah
+Sekarang FDP tahu... ikhlas itu keberanian tertinggi
+Untuk bilang "cukup" di tengah cinta yang masih menyala
+Dan memilih diri sendiri meski rasanya perih
+
+[Bridge]
+"Ikhlas itu bukan lupa. Ikhlas itu mengingat tanpa ingin kembali.
+FDP tidak akan melupakanmu. Tapi FDP juga tidak akan mencarimu lagi.
+Karena bahagia FDP... tidak boleh bergantung pada siapa pun.
+Terima kasih telah mengajarkan FDP arti kehilangan...
+Karena dari situ, FDP belajar memiliki dirinya sendiri."
+
+[Chorus]
+FDP belajar ikhlas... walau sakit
+Melepaskan yang memaksa adalah bentuk cinta
+Bukan untuk dia... tapi untuk FDP sendiri
+Karena hati ini pantas untuk bahagia
+Bukan untuk terus-terusan menangis dalam diam
+
+[Outro]
+Hujan gerimis di luar jendela
+Tapi FDP sudah tidak lagi mencarimu di setiap rintiknya
+FDP belajar ikhlas... dan itu cukup`
+            },
+            {
+                id: 5,
+                title: "Digital Dream",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Electronic",
+                spotifyLink: "https://open.spotify.com/intl-id/track/6ZA7pQdqtJl2PY3ji605l3",
+                prarilisLink: "https://sndo.ffm.to/4a642mr",
+                lyrics: `[Intro]
+System initializing...
+Dream sequence activated.
+Welcome.
+
+[Verse 1]
+Is this real 
+Or just a feel 
+Pixels on my skin
+Where do I begin
+
+I scroll through faces
+Empty spaces
+A million likes
+But sleepless nights
+
+[Pre-Chorus]
+Turn me on, turn me off
+Digital love, never enough
+Push the button, pull the plug
+I'm a ghost inside the juggernaut
+
+[Chorus]
+Digital dream 
+Tear the seam 
+Digital dream
+Nothing's what it seems
+
+Dream, dream, dream
+Glitch, scream, beam
+Digital dream
+Blow the whole regime
+
+[Verse 2]
+Screen so bright
+Lose my sight
+One more touch
+Too much, too much
+
+Your avatar
+My falling star
+A coded kiss
+A hollow bliss
+
+[Pre-Chorus]
+Turn me on, turn me off
+Digital love, never enough
+Push the button, pull the plug
+I'm a ghost inside the juggernaut
+
+[Chorus]
+Digital dream 
+Tear the seam 
+Digital dream 
+Nothing's what it seems
+
+Dream, dream, dream
+Glitch, scream, beam
+Digital dream
+Blow the whole regime
+
+[Bridge]
+They said ones and zeros couldn't feel.
+They said the heart is analog.
+But lying here in neon glow...
+I swear my motherboard is warm.
+
+So go ahead... delete me.
+I'll just respawn.
+
+[Chorus]
+Digital dream 
+Tear the seam 
+Digital dream 
+Nothing's what it seems
+
+Dream, dream, dream
+Glitch, scream, beam
+Digital dream
+Blow the whole regime
+
+[Outro]
+Digital...  dream...
+Dream...  dream...
+
+...System off.
+Goodnight.`
+            },
+            {
+                id: 6,
+                title: "Hidup Seperti Larry",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Rock",
+                spotifyLink: "https://open.spotify.com/intl-id/track/6ZA7pQdqtJl2PY3ji605l3",
+                prarilisLink: "https://sndo.ffm.to/4a3nyrk",
+                lyrics: `[Intro]
+Suara FDP: "Hidup itu cuma sekali. FDP pilih... all out!"
+
+[Verse 1]
+Dulu FDP sering diam di tempat
+Takut salah, takut jatuh, takut jelek di mata
+FDP pikir aman itu nyaman
+Tapi ternyata... diam itu lambat laun membunuh mimpi
+
+FDP lihat Larry di layar kaca
+Dia loncat, dia tertawa, dia jatuh, dia bangkit
+Bukan karena nekat atau gila
+Tapi karena dia percaya: "Aku bisa melewatinya"
+
+[Chorus]
+FDP HIDUP SEPERTI LARRY!
+Bukan nekat, tapi berani ambil risiko
+Bukan bodoh, tapi percaya diri
+Setiap hari adalah petualangan baru
+
+FDP HIDUP SEPERTI LARRY!
+Tak takut salah, karena salah adalah guru
+Tak takut gagal, karena gagal adalah batu loncatan
+FDP nikmati setiap moment... tanpa menyesal nanti
+
+[Verse 2]
+FDP mulai ubah cara pandang
+Takut itu wajar, tapi jangan jadi penghalang
+FDP tetap waspada, tetap hitung risiko
+Tapi FDP gak mau jadi penonton di hidupnya sendiri
+
+FDP coba hal baru yang dulu ditakuti
+Bicara di depan umum, mulai usaha sendiri
+Jatuh? Pernah. Malu? Sering.
+Tapi FDP tersenyum... karena FDP hidup, bukan hanya ada
+
+[Bridge]
+"Orang bilang: 'FDP, kamu berubah.'
+FDP jawab: 'Iya. Aku berubah jadi lebih berani.'
+
+Hidup seperti Larry bukan soal nekat loncat dari tebing.
+Tapi soal berani memulai... walau takut.
+Tentang mengatasi rasa ragu... demi passion yang FDP cintai.
+Tentang menikmati hari ini... tanpa terlalu cemas tentang besok.
+
+FDP gak tahu besok bagaimana.
+Tapi FDP tahu... hari ini FDP akan hidup sepenuhnya."
+
+[Chorus]
+FDP HIDUP SEPERTI LARRY!
+Bukan nekat, tapi berani ambil risiko
+Bukan bodoh, tapi percaya diri
+Setiap hari adalah petualangan baru
+
+FDP HIDUP SEPERTI LARRY!
+Tak takut salah, karena salah adalah guru
+Tak takut gagal, karena gagal adalah batu loncatan
+FDP nikmati setiap moment... tanpa menyesal nanti
+
+[Outro]
+FDP tersenyum, lihat langit yang luas
+Hidup cuma sekali, FDP pilih bahagia
+Bukan bahagia tanpa masalah
+Tapi bahagia karena berani... menjadi diri sendiri.`
+            },
+            {
+                id: 7,
+                title: "Ternyata",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Alternative/Indie",
+                spotifyLink: "https://open.spotify.com/intl-id/album/5FmR0oeObyPQV3WAMCEB54",
+                prarilisLink: "https://sndo.ffm.to/17m8zxv",
+                lyrics: `[Verse 1]
+Hari ini panas banget
+Tapi aku pake jaket
+Enggak ada alasan spesial
+Lupa aja lihat ramalan
+
+HP bunyi berkali-kali
+Ternyata cuma notif game
+Tapi aku tetap buka
+Biar ada yang dikerjain
+
+[Pre-Chorus]
+Padahal dari tadi
+Cuma ngeliatin nama dia
+Tanpa ngetik apa-apa
+
+[Chorus]
+Ternyata
+Enggak seribut yang aku kira
+Ternyata
+Cuma aku yang kebanyakan mikir
+Padahal dia mungkin cuma sibuk
+Atau mungkin emang udah cukup
+
+Ternyata
+Enggak ada yang perlu nangis
+Ternyata
+Cuma butuh teh anget dan tidur yang cukup
+
+[Verse 2]
+Tadi malam bangun jam dua
+Lihat chat terakhir jam lima sore
+Tutup aplikasi
+Langsung lanjut tidur lagi
+
+Enggak muter lagu galau
+Enggak nulis status aesthetic
+Besok paginya biasa aja
+Bahkan lupa sempet kepikiran
+
+[Bridge]
+Mungkin emang udah segitunya
+Bukan karena salah siapa
+Bukan karena orang ketiga juga
+Cuma beda waktu aja
+Kayak kamu suka malam
+Dan aku orang pagi
+
+[Outro]
+Ternyata
+Selesainya enggak heboh
+Ternyata
+Cuma berhenti buka chat pribadi
+Lalu suatu hari sadar
+Udah seminggu lebih enggak kepikiran
+
+Ternyata
+Hidup tetep jalan.`
+            },
+            {
+                id: 8,
+                title: "Tanda Baca Putus Asa",
+                artist: "FDP",
+                type: "single",
+                album: null,
+                albumOrder: null,
+                genre: "Pop",
+                spotifyLink: "https://open.spotify.com/intl-id/album/5FmR0oeObyPQV3WAMCEB54",
+                prarilisLink: "https://sndo.ffm.to/3zv1xyj",
+                lyrics: `[Verse 1]
+Saya buka chat WhatsApp
+Jari melayang di atas keyboard
+Saya ingin bilang sesuatu
+Tapi tidak tahu harus mulai dari mana
+
+Saya ketik "hai"
+Saya hapus
+Saya ketik "halo"
+Saya hapus lagi
+Saya ketik "maaf mengganggu"
+Saya hapus lagi
+
+20 menit berlalu
+Kolom chat masih kosong
+
+[Pre-chorus]
+Saya tulis paragraf panjang
+Tentang apa yang saya rasakan
+Lalu saya baca ulang
+Ada satu koma kurang
+Saya perbaiki
+Lalu saya hapus semua
+
+[Chorus]
+Tanda baca putus asa
+Titik, koma, tanda tanya
+Tanda baca putus asa
+Semua terlihat salah di mata saya
+
+Saya ubah posisi koma
+Saya ganti tanda tanya menjadi titik
+Saya baca lagi
+Masih belum pas
+Akhirnya saya hapus
+Lalu saya tutup chat
+
+[Verse 2]
+Besoknya saya coba lagi
+Saya tulis "saya rindu"
+Tiga kata
+Tidak perlu tanda baca rumit
+Tapi jari saya gemetar
+Saya hapus
+
+Saya tulis "kangen"
+Satu kata
+Tidak perlu titik
+Tidak perlu koma
+Tetap tidak terkirim
+
+[Pre-chorus 2]
+Saya lihat bubble tiga titik
+Dia sedang mengetik
+Saya panik
+Saya hapus semua
+Diam
+Bubble menghilang
+Dia tidak jadi kirim pesan
+
+Kita sama-sama putus asa
+
+[Chorus]
+Tanda baca putus asa
+Kita berdua saling diam
+Tanda baca putus asa
+Pesan tersimpan di draft selamanya
+
+Saya ingin kirim stiker sajaTapi stiker tidak cukup untuk menjelaskan perasaan
+Saya ingin kirim voice note
+Tapi suara saya pecah mendengar namanya
+
+[Bridge]
+Suatu hari saya buka chat itu lagi
+Setelah tiga bulan
+Pesan terakhir masih draft
+Tidak pernah terkirim
+
+Saya baca ulang
+Paragraf yang dulu saya ketik
+Ternyata tidak seburuk yang saya kira
+Koma sudah pas
+Tanda tanya sudah tepat
+Tidak ada yang salah
+
+Yang salah adalah saya
+Yang terlalu takut
+Untuk menekan tombol kirim
+
+[Chorus final]
+Tanda baca putus asa
+Saya tekan kirim
+Sekarang
+Tanpa edit
+Tanpa hapus
+
+Pesan terkirim
+Dua tanda centang biru muncul
+Dia membaca
+Dia mengetik
+Saya menunggu
+
+[Outro]
+Bubble tiga titik
+Titik
+Titik
+Titik
+
+Lalu berhenti
+Tidak ada pesan masuk
+Hanya tanda baca putus asa
+Yang tersisa
+
+Selesai.`
+            }
+        ];
+
+        // ============================================
+        // LOGIKA WEBSITE DENGAN FILTER GENRE
+        // ============================================
+        let currentCategory = 'all';
+        let currentGenre = 'all';
+        let currentAlbum = null;
+        let currentSearch = '';
+        let selectedSongId = null;
+        let albums = {};
+
+        function getAlbumList() {
+            const albumList = {};
+            songsData.forEach(song => {
+                if (song.type === 'album' && song.album) {
+                    if (!albumList[song.album]) {
+                        albumList[song.album] = { name: song.album, count: 0, songs: [] };
+                    }
+                    albumList[song.album].count++;
+                    albumList[song.album].songs.push(song);
+                }
+            });
+            for (let album in albumList) {
+                albumList[album].songs.sort((a, b) => a.albumOrder - b.albumOrder);
+            }
+            return albumList;
+        }
+
+        function getSingleCount() {
+            return songsData.filter(song => song.type === 'single').length;
+        }
+
+        function getGenreCount(genre) {
+            return songsData.filter(song => song.genre === genre).length;
+        }
+
+        function generateAlbumButtons() {
+            const filterSection = document.getElementById('filterSection');
+            const existingBtns = filterSection.querySelectorAll('.filter-btn[data-album]');
+            existingBtns.forEach(btn => btn.remove());
+            
+            for (let albumName in albums) {
+                const album = albums[albumName];
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.setAttribute('data-category', 'album');
+                btn.setAttribute('data-album', albumName);
+                btn.innerHTML = `💿 ${albumName} (${album.count})`;
+                btn.onclick = () => selectCategory('album', albumName);
+                filterSection.appendChild(btn);
+            }
+        }
+
+        function selectCategory(type, value = null) {
+            if (type === 'all') {
+                currentCategory = 'all';
+                currentAlbum = null;
+            } else if (type === 'single') {
+                currentCategory = 'single';
+                currentAlbum = null;
+            } else if (type === 'album') {
+                currentCategory = 'album';
+                currentAlbum = value;
+            }
+            
+            document.querySelectorAll('#filterSection .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (type === 'all' && btn.getAttribute('data-category') === 'all') btn.classList.add('active');
+                else if (type === 'single' && btn.getAttribute('data-category') === 'single') btn.classList.add('active');
+                else if (type === 'album' && btn.getAttribute('data-album') === value) btn.classList.add('active');
+            });
+            
+            selectedSongId = null;
+            displaySongs();
+            document.getElementById('lyricsPanel').innerHTML = '<div class="no-selection">🎤 Klik salah satu lagu untuk melihat liriknya</div>';
+        }
+
+        function selectGenre(genre) {
+            currentGenre = genre;
+            
+            document.querySelectorAll('#genreSection .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-genre') === genre) btn.classList.add('active');
+            });
+            
+            selectedSongId = null;
+            displaySongs();
+            document.getElementById('lyricsPanel').innerHTML = '<div class="no-selection">🎤 Klik salah satu lagu untuk melihat liriknya</div>';
+        }
+
+        function updateStats() {
+            const singleCount = getSingleCount();
+            const albumCount = Object.keys(albums).length;
+            let totalAlbumSongs = 0;
+            for (let album in albums) totalAlbumSongs += albums[album].count;
+            
+            let genreInfo = '';
+            if (currentGenre !== 'all') {
+                const genreCount = getGenreCount(currentGenre);
+                genreInfo = ` | 🎸 Genre: ${currentGenre} (${genreCount} lagu)`;
+            }
+            
+            document.getElementById('stats').innerHTML = `📊 Total: ${songsData.length} lagu | 🎤 Single: ${singleCount} lagu | 💿 Album: ${albumCount} album (${totalAlbumSongs} lagu)${genreInfo}`;
+        }
+
+        function filterAndDisplay() {
+            currentSearch = document.getElementById('searchInput').value;
+            displaySongs();
+        }
+
+        function displaySongs() {
+            const songListDiv = document.getElementById('songList');
+            let filteredSongs = songsData.filter(song => {
+                if (currentCategory === 'single' && song.type !== 'single') return false;
+                if (currentCategory === 'album' && (song.type !== 'album' || song.album !== currentAlbum)) return false;
+                if (currentGenre !== 'all' && song.genre !== currentGenre) return false;
+                if (currentSearch) {
+                    return song.title.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                           song.artist.toLowerCase().includes(currentSearch.toLowerCase());
+                }
+                return true;
+            });
+            
+            if (filteredSongs.length === 0) {
+                songListDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#888;">🎵 Lagu tidak ditemukan</div>';
+                updateStats();
+                return;
+            }
+            
+            songListDiv.innerHTML = filteredSongs.map(song => `
+                <div class="song-item ${selectedSongId === song.id ? 'selected' : ''}" onclick="showLyrics(${song.id})">
+                    <div class="song-info">
+                        <div class="song-title">${escapeHtml(song.title)}</div>
+                        <div class="song-artist">${escapeHtml(song.artist)}</div>
+                        <div class="song-genre-badge">${getGenreIcon(song.genre)} ${escapeHtml(song.genre)}</div>
+                    </div>
+                    <div class="song-play">🎵</div>
+                </div>
+            `).join('');
+            
+            updateStats();
+        }
+
+        function getGenreIcon(genre) {
+            const icons = {
+                'Rock': '🎸',
+                'Pop': '🎤',
+                'Alternative/Indie': '🎶',
+                'Electronic': '⚡'
+            };
+            return icons[genre] || '🎵';
+        }
+
+        function showLyrics(songId) {
+            const song = songsData.find(s => s.id === songId);
+            if (!song) return;
+            selectedSongId = songId;
+            displaySongs();
+            
+            const lyricsPanel = document.getElementById('lyricsPanel');
+            let albumInfo = song.type === 'album' ? `<div class="album-badge">💿 ${escapeHtml(song.album)} • Track ${song.albumOrder}</div>` : `<div class="album-badge">🎤 Single</div>`;
+            
+            lyricsPanel.innerHTML = `
+                <div class="lyrics-header">
+                    <h2>${escapeHtml(song.title)}</h2>
+                    <div class="artist">${escapeHtml(song.artist)}</div>
+                    <div>${albumInfo}</div>
+                    <div class="album-badge" style="background:#667eea20; margin-top:5px;">${getGenreIcon(song.genre)} Genre: ${escapeHtml(song.genre)}</div>
+                    <div class="link-buttons">
+                        <a href="${song.spotifyLink}" target="_blank" class="spotify-link">🎵 Dengarkan di Spotify</a>
+                        <a href="${song.prarilisLink}" target="_blank" class="prarilis-link">📺 Tonton Prarilis</a>
+                    </div>
+                </div>
+                <div class="lyrics-content">${song.lyrics.replace(/\n/g, '<br>')}</div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        }
+
+        // ============================================
+        // INISIALISASI
+        // ============================================
+        albums = getAlbumList();
+        generateAlbumButtons();
+        updateStats();
+        displaySongs();
+
+        // Event listeners untuk kategori
+        const allBtn = document.querySelector('#filterSection .filter-btn[data-category="all"]');
+        const singleBtn = document.querySelector('#filterSection .filter-btn[data-category="single"]');
+        if (allBtn) allBtn.onclick = () => selectCategory('all');
+        if (singleBtn) singleBtn.onclick = () => selectCategory('single');
+
+        // Event listeners untuk genre
+        const genreBtns = document.querySelectorAll('#genreSection .filter-btn');
+        genreBtns.forEach(btn => {
+            const genre = btn.getAttribute('data-genre');
+            if (genre === 'all') {
+                btn.onclick = () => selectGenre('all');
+            } else {
+                btn.onclick = () => selectGenre(genre);
+            }
+        });
+
+        // Anti copy sederhana
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'p')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+        
+        console.log('Website siap! Total lagu:', songsData.length);
+    </script>
+</body>
+</html>
